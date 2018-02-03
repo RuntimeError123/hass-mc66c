@@ -60,9 +60,9 @@ Place the files from Git in a separate folder (e.g.
 variables section in the script according to your needs (see next paragraph). 
 Test the script by running it using python3 stadsverwarming.py . When it is not
 executed by root (which I would definitly recommend) the user running should 
-have permission to use serial ports. In Debian / Ubuntu this can be accomplished
-by adding the user to the 'dialout' group. Schedule the script to run every X 
-minutes / hours using crontab.
+have permission to use serial ports. In Debian / Ubuntu this can be 
+accomplished by adding the user to the 'dialout' group. Schedule the script to 
+run every X minutes / hours using crontab.
 
 # 4. DEFINITION OF VARIABLES
 The script starts with some variables in in the Variables section. This 
@@ -78,11 +78,13 @@ paragraph will explain the purpose of these variables.
 	
 - protocol
 
-	The protocol used to connect to Home Assistant. Supported is http and https.
+	The protocol used to connect to Home Assistant. Supported is http and 
+	https.
 
 - homeassistant_ip
 
-	The IP address used to connect to Home Assistant. FQDN's are also supported.
+	The IP address used to connect to Home Assistant. FQDN's are also 
+	supported.
 
 - Port
 
