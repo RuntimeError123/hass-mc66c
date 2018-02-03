@@ -26,7 +26,7 @@ Kamstrup Multical 66C meter. This meter was provided by Nuon (utility company)
 to record the energy consumption for the district heating (which we call
 'stadsverwarming' in Dutch) in my home. The meter is not connected to the smart
 meter in my home, nor it has a serial port which I am able to connect a home
-automation solution to. There are no connectors visable. This script uses an
+automation solution to. There are no connectors visible. This script uses an
 infrared read/write head to communicate with the meter. Because the meter is
 battery powered, this will eventually drain the battery. According to the
 Kamstrup Multical 66C meter manual the normal battery life of the main battery
@@ -59,7 +59,7 @@ Place the files from Git in a separate folder (e.g.
 /home/homeassistant/stadsverwarming). Change the variables listed under the
 variables section in the script according to your needs (see next paragraph).
 Test the script by running it using python3 stadsverwarming.py . When it is not
-executed by root (which I would definitly recommend) the user running should
+executed by root (which I would definitely recommend) the user running should
 have permission to use serial ports. In Debian / Ubuntu this can be
 accomplished by adding the user to the 'dialout' group. Schedule the script to
 run every X minutes / hours using crontab.
@@ -108,5 +108,5 @@ paragraph will explain the purpose of these variables.
 
 - [energy/volume/temp_in/temp_out]\_icon
 
-	Icon used for the sensor in gui. Append with "mdi:" and the Material Design
+	Icon used for the sensor in GUI. Append with "mdi:" and the Material Design
 	Icon name. Icon "alert" would become "mdi:alert".
