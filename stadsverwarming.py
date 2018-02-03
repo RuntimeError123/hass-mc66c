@@ -47,10 +47,10 @@ from time import sleep
 
 # Change entity state function
 #################################
-def change_entity_state(entity_id: str, friendly_name: str, unit_of_measurement: str, new_state: float):
+def change_entity_state(entity_id: str, friendly_name: str, unit_of_measurement: str, icon: str, new_state: float):
 	url = 'http://'+homeassistant_ip+':8123/api/states/'+entity_id
 	headers = {'x-ha-access' : homeassistant_password ,'content-type' : 'application/json'}
-	data = json.dumps({'state' : new_state,'attributes' : {'unit_of_measurement' : unit_of_measurement,'friendly_name' : friendly_name}})
+	data = json.dumps({'state' : new_state,'attributes' : {'unit_of_measurement' : unit_of_measurement,'friendly_name' : friendly_name, 'icon' : icon}})
 	response = requests.post(url, headers=headers, data=data)
 	return response
 
@@ -75,12 +75,11 @@ new_temp_out = int((new_data[4]).decode('utf-8'))/100
 
 # Updating HomeAssistant values
 ###############################
-energy_response = change_entity_state(energy_entity_id, energy_friendly_name, "GJ", new_energy)
+energy_response = change_entity_state(energy_entity_id, energy_friendly_name,"GJ","mdi:gauge",new_energy)
 print("Energy updated: ",energy_response)
-volume_response = change_entity_state(volume_entity_id, volume_friendly_name, "M3", new_volume)
+volume_response = change_entity_state(volume_entity_id, volume_friendly_name,"M3","mdi:water",new_volume)
 print("Energy updated: ",volume_response)
-temp_in_response = change_entity_state(temp_in_entity_id,temp_in_friendly_name,"°C",new_temp_in)
+temp_in_response = change_entity_state(temp_in_entity_id,temp_in_friendly_name,"°C","mdi:thermometer",new_temp_in)
 print("Energy updated: ",temp_in_response)
-temp_out_response = change_entity_state(temp_out_entity_id,temp_out_friendly_name,"°C",new_temp_out)
+temp_out_response = change_entity_state(temp_out_entity_id,temp_out_friendly_name,"°C","mdi:thermometer",new_temp_out)
 print("Energy updated: ",temp_out_response)
-
