@@ -68,28 +68,43 @@ minutes / hours using crontab.
 The script starts with some variables in in the Variables section. This 
 paragraph will explain the purpose of these variables.
 - serialport
+
 	The serial port used to contact the IR Schreib Lesekopf (or compatible).
 	This usually corresponds to a Linux serial port (like /dev/ttyUSB1). If you 
 	experience that this changes after a reboot, please use a udev rule to make
 	a static mapping. On systems running Windows it will probably work to use 
 	COM1 or the COM port which corresponds to the port which is used to connect
 	to the IR Schreib Lesekopf.
+	
 - protocol
+
 	The protocol used to connect to Home Assistant. Supported is http and https.
+
 - homeassistant_ip
+
 	The IP address used to connect to Home Assistant. FQDN's are also supported.
+
 - Port
+
 	The port used to connect to Home Assistant. Default is 8123.
+
 - homeassistant_password
+
 	Password which is configured as api_password in HomeAssistant's 
 	configuration.yaml or secrets.yaml. Currently this script does not support
 	Home Assistant installation without a password set.
+
 - [energy/volume/temp_in/temp_out]_entity_id
+
 	Device identifier which must be unique to this specific device in Home
 	Assistant. Must be in the format [component name].[platform]_name .
+
 - [energy/volume/temp_in/temp_out]_friendly_name
+
 	Friendly name, how device will be displayed in Home Assistant. Can be 
 	overridden by customize.yaml.
+
 - [energy/volume/temp_in/temp_out]_icon
+
 	Icon used for the sensor in gui. Append with "mdi:" and the Material Design
 	Icon name. Icon "alert" would become "mdi:alert".	
