@@ -1,5 +1,6 @@
 ##################################################################################
 # Kamstrup Multical 66C import script for Home Assistant                         #
+# Version 0.1                                                                    #
 # Author: RuntimeError123 / L. Bosch                                             #
 # MIT License                                                                    #
 # Copyright (c) 2018 RuntimeError123 / L. Bosch                                  #
