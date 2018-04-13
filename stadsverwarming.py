@@ -102,16 +102,16 @@ volume_response = change_entity_state(volume_entity_id,
     volume_friendly_name,
     'M3',
     volume_icon,new_volume)
-print("Energy updated: ",volume_response)
+print("Volume updated: ",volume_response)
 temp_in_response = change_entity_state(temp_in_entity_id,
     temp_in_friendly_name,
     '°C',
     temp_in_icon,
     new_temp_in)
-print("Energy updated: ",temp_in_response)
+print("Temperature in updated: ",temp_in_response)
 temp_out_response = change_entity_state(temp_out_entity_id,
     temp_out_friendly_name,
     '°C',
     temp_out_icon,
     new_temp_out)
-print("Energy updated: ",temp_out_response)
+print("Temperature out updated: ",temp_out_response)
