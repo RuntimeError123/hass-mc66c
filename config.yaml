@@ -1,0 +1,31 @@
+main:
+  serialport: /dev/ttyUSB13
+  destination: mqtt
+  
+http:
+  protocol: http
+  homeassistant_ip: 192.168.1.X
+  port: 8123
+  api_password: password
+  energy_entity_id: sensor.stadsverwarming_energy
+  energy_friendly_name: Stadsverwarming energie
+  energy_icon: mdi:gauge
+  volume_entity_id: sensor.stadsverwarming_volume
+  volume_friendly_name: Stadsverwarming volume
+  volume_icon: mdi:water
+  temp_in_entity_id: sensor.stadsverwarming_temperature_in
+  temp_in_friendly_name: Stadsverwarming inkomend
+  temp_in_icon: mdi:thermometer
+  temp_out_entity_id: sensor.stadsverwarming_temperature_out
+  temp_out_friendly_name: Stadsverwarming uitgaand
+  temp_out_icon: mdi:thermometer
+  
+mqtt:
+  broker: 192.168.1.50
+  port: 8883
+  username: mqtt
+  password: password
+  certificate: /etc/ssl/certs/ca_certificates.crt
+  tls_version: TLSv1_2
+  tls_insecure: false
+  topic: home-assistant/stadsverwarming
