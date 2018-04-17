@@ -58,6 +58,11 @@ installed:
 To use this script with MQTT, install Paho MQTT 
 (`apt-get install python3-pip && pip3 install paho-mqtt`).
 
+To get the meter readings, you will need an IR interface. I am currently using
+the IR Schreib Lesekopf (infrared read write head) from Volkszaehler
+(https://wiki.volkszaehler.org/hardware/controllers/ir-schreib-lesekopf) which 
+I recommend.
+
 # 3. INSTALLATION
 Place the files from Git in a separate folder (e.g.
 /home/homeassistant/stadsverwarming). Edit the config.yaml file according to 
