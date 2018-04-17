@@ -252,8 +252,8 @@ has been tested with Mosquitto (1.4.15-0mosquitto3)
 
 The script has been tested with the following destinations / settings:
 
-- http met password
-- http zonder password
-- https met password
-- mqtt met encryptie en password
-- mqtt zonder encryptie en password
+- http with password
+- http without password
+- https with password
+- mqtt with TLS1.2 and password
+- mqtt without encryption and without password
