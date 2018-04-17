@@ -53,10 +53,10 @@ installed:
 - requests
 - json
 - time
-- yaml (installable with apt-get install python3-yaml)
+- yaml (installable with `apt-get install python3-yaml`)
 
-To use this script with MQTT, install Paho MQTT (apt-get install python3-pip & 
-pip3 install paho-mqtt).
+To use this script with MQTT, install Paho MQTT 
+(`apt-get install python3-pip && pip3 install paho-mqtt`).
 
 # 3. INSTALLATION
 Place the files from Git in a separate folder (e.g.
