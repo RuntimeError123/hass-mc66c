@@ -119,9 +119,9 @@ This section is required if destination is set to http.
 - api_password (optional)
 
     Password which is configured as api_password in Home Assistant's
-    configuration.yaml or secrets.yaml. Leave empty if your Home Assistant is 
-    not protected by a password. I recommend configuring an api password for
-    Home Assistant.
+    configuration.yaml or secrets.yaml. Remove from config file if your Home 
+    Assistant is not protected by a password. I recommend configuring an api 
+    password for Home Assistant.
 
 - [energy/volume/temp_in/temp_out]\_entity_id (required)
 
@@ -155,21 +155,21 @@ This section is required if destination is set to mqtt
 - username (optional)
 
     If authentication on the MQTT broker is required, please specify the 
-    username. If this setting is not defined, no authentication will be 
-    attempted. I recommend protecting MQTT with a username and a strong 
+    username. If this setting removed from the configration, no authentication 
+    will be attempted. I recommend protecting MQTT with a username and a strong 
     password.
     
 - password (optional)
 
     If authentication on the MQTT broker is required, please specify the 
-    password.
+    password. This setting requires a username to be defined.
     
 - certificate (optional)
 
     Specify a certificate to verify the connection to the MQTT broker. Might
     be /etc/ssl/certs/ca_certificates.crt when the server certificate has been
-    signed by a generally trusted authority. If this setting is not defined, 
-    plain text MQTT will be used. I recommend using ssl/tls.
+    signed by a generally trusted authority. If this setting is removed from
+    the configuration, plain text MQTT will be used. I recommend using ssl/tls.
     
 - tls_version (optional)
 
@@ -180,12 +180,14 @@ This section is required if destination is set to mqtt
     - TLSv1_1
     - TLSv1_2
     
-    I recommend selecting TLSv1_2 which corresponds to TLS v1.2.
+    I recommend selecting TLSv1_2 which corresponds to TLS v1.2. 
+    This setting requires a certificate to be defined.
 
 - tls_insecure (optional)
 
     Set to true if you want to switch off checking the  hostname in the used 
-    certificate.  I recommend leaving this configured to 'false'.
+    certificate.  I recommend leaving this configured to 'false'. This setting 
+    requires a certificate to be defined.
     
 - topic: (required)
 
