@@ -25,7 +25,7 @@ mqtt:
   port: 8883
   username: mqtt
   password: password
-  certificate: /etc/ssl/certs/ca_certificates.crt
+  certificate: /etc/ssl/certs/ca-certificates.crt
   tls_version: TLSv1_2
   tls_insecure: false
   topic: home-assistant/stadsverwarming
