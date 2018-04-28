@@ -161,7 +161,11 @@ if destination == 'mqtt':
     except:
         pass
     else:
-        mqttc.tls_set(certificate, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED, tls_version=(getattr(ssl,'PROTOCOL_'+tls_version)), ciphers=None)
+        mqttc.tls_set(certificate, certfile=None, \
+        keyfile=None, \
+        cert_reqs=ssl.CERT_REQUIRED, \
+        tls_version=(getattr(ssl,'PROTOCOL_'+tls_version)), \
+        ciphers=None)
         mqttc.tls_insecure_set(tls_insecure)
     try:
         username
