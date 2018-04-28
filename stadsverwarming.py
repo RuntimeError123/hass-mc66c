@@ -26,6 +26,7 @@
 
 # Importing modules
 #################################
+import os
 import serial
 import requests
 from time import sleep
@@ -34,7 +35,9 @@ import json
 
 # Loading config
 #################################
-config = yaml.safe_load(open('config.yaml'))
+configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), \
+'config.yaml')
+config = yaml.safe_load(open(configfile))
 destination = config['main']['destination']
 serialport = config['main']['serialport']
 
