@@ -1,4 +1,5 @@
-# Kamstrup Multical 66C import script for Home Assistant
+# Imports meter readings of Kamstrup Multical 66C to Home Assistant \
+(www.home-assistant.io) or sends them to a MQTT broker
 ## Author: RuntimeError123 / L. Bosch
 ## MIT License
 #### Copyright © 2018 RuntimeError123 / L. Bosch
