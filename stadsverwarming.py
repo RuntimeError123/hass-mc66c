@@ -175,9 +175,7 @@ if destination == 'mqtt':
         mqttc.username_pw_set(username, password=password)
     mqttc.connect(broker, port=port)
     mqttc.loop_start()
-    mqttc.publish(topic, state)    
+    mqttc.publish(topic, state)
     mqttc.disconnect()
     mqttc.loop_start()
-
-    
     print("MQTT data published: " +state)
