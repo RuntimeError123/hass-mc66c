@@ -40,6 +40,10 @@ configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), \
 config = yaml.safe_load(open(configfile))
 destination = config['main']['destination']
 serialport = config['main']['serialport']
+compare_previous_readings = config['main']['compare_previous_readings']
+if compare_previous_readings:
+    energy_threshold = config['main']['energy_threshold']
+    volume_threshold = config['main']['volume_threshold']
 
 # Load mqtt and ssl if mqtt is selected
 #################################
@@ -101,21 +105,33 @@ def http_change_entity_state(entity_id: str,
         response = requests.post(url, headers=headers, data=data)
         return response
 
+def get_meter_readings():
+    mc66c = serial.Serial(port=serialport,
+        bytesize=serial.SEVENBITS,
+        parity=serial.PARITY_EVEN,
+        stopbits=serial.STOPBITS_ONE,
+        timeout=2)
+    mc66c.baudrate = 300
+    mc66c.write('/#1'.encode('utf-8'))
+    mc66c.flush()
+    sleep(1)
+    mc66c.baudrate = 1200
+    mc66c.flushInput()
+    data = mc66c.read(87).split()
+    mc66c.close()
+    return data
+
+# Check if previous readings file exist and if not disable comparing
+###############################
+previous_readings_filepath = os.path.join\
+(os.path.dirname(os.path.realpath(__file__)),'previous_readings.txt')  
+if not os.path.isfile(previous_readings_filepath):
+    compare_previous_readings = False
+
+
 # Getting information from Kamstrup Multical 66C
 ###############################
-mc66c = serial.Serial(port=serialport,
-    bytesize=serial.SEVENBITS,
-    parity=serial.PARITY_EVEN,
-    stopbits=serial.STOPBITS_ONE,
-    timeout=2)
-mc66c.baudrate = 300
-mc66c.write('/#1'.encode('utf-8'))
-mc66c.flush()
-sleep(1)
-mc66c.baudrate = 1200
-mc66c.flushInput()
-new_data = mc66c.read(87).split()
-mc66c.close()
+new_data = get_meter_readings()
 
 # Decode and transform new data
 ###############################
@@ -124,58 +140,87 @@ new_volume = int((new_data[1]).decode('utf-8'))/1000
 new_temp_in = int((new_data[3]).decode('utf-8'))/100
 new_temp_out = int((new_data[4]).decode('utf-8'))/100
 
-# Updating HomeAssistant values
+# Comparing previous readings
 ###############################
-if destination == 'http':
-    energy_response = http_change_entity_state(energy_entity_id,
-        energy_friendly_name,
-        'GJ',
-        energy_icon,new_energy)
-    print("Energy updated: ",energy_response)
-    volume_response = http_change_entity_state(volume_entity_id,
-        volume_friendly_name,
-        'M3',
-        volume_icon,new_volume)
-    print("Volume updated: ",volume_response)
-    temp_in_response = http_change_entity_state(temp_in_entity_id,
-        temp_in_friendly_name,
-        '°C',
-        temp_in_icon,
-        new_temp_in)
-    print("Temperature in updated: ",temp_in_response)
-    temp_out_response = http_change_entity_state(temp_out_entity_id,
-        temp_out_friendly_name,
-        '°C',
-        temp_out_icon,
-        new_temp_out)
-    print("Temperature out updated: ",temp_out_response)
+compare_successful = False
+if compare_previous_readings:
+    previous_readings = open(previous_readings_filepath,'r').read().split(',')
+    previous_energy = float(previous_readings[0])
+    previous_volume = float(previous_readings[1])
+    
+    if (abs(new_energy-previous_energy)) < energy_threshold and \
+    new_energy >= previous_energy and \
+    (abs(new_volume-previous_volume)) < volume_threshold and \
+    new_volume >= previous_volume:
+        compare_successful = True
+    else:
+        print("Compare failed, not updating values")
+    
+# Updating values
+###############################
+if compare_successful or not compare_previous_readings:
+    if destination == 'http':
+        energy_response = http_change_entity_state(energy_entity_id,
+            energy_friendly_name,
+            'GJ',
+            energy_icon,new_energy)
+        print("Energy updated: ",energy_response)
+        volume_response = http_change_entity_state(volume_entity_id,
+            volume_friendly_name,
+            'M3',
+            volume_icon,new_volume)
+        print("Volume updated: ",volume_response)
+        temp_in_response = http_change_entity_state(temp_in_entity_id,
+            temp_in_friendly_name,
+            '°C',
+            temp_in_icon,
+            new_temp_in)
+        print("Temperature in updated: ",temp_in_response)
+        temp_out_response = http_change_entity_state(temp_out_entity_id,
+            temp_out_friendly_name,
+            '°C',
+            temp_out_icon,
+            new_temp_out)
+        print("Temperature out updated: ",temp_out_response)
 
-if destination == 'mqtt':
-    state = json.dumps({'Energy' : new_energy, \
-    'Volume' : new_volume, \
-    'Temperature_in' : new_temp_in, \
-    'Temperature_out' : new_temp_out})
-    mqttc = mqtt.Client()
-    try:
-        certificate
-    except:
-        pass
-    else:
-        mqttc.tls_set(certificate, certfile=None, \
-        keyfile=None, \
-        cert_reqs=ssl.CERT_REQUIRED, \
-        tls_version=(getattr(ssl,'PROTOCOL_'+tls_version)), \
-        ciphers=None)
-        mqttc.tls_insecure_set(tls_insecure)
-    try:
-        username
-    except:
-        pass
-    else:
-        mqttc.username_pw_set(username, password=password)
-    mqttc.connect(broker, port=port)
-    mqttc.loop_start()
-    mqttc.publish(topic, state)
-    mqttc.disconnect()
-    mqttc.loop_start()
-    print("MQTT data published: " +state)
+    if destination == 'mqtt':
+        state = json.dumps({'Energy' : new_energy, \
+        'Volume' : new_volume, \
+        'Temperature_in' : new_temp_in, \
+        'Temperature_out' : new_temp_out})
+        mqttc = mqtt.Client()
+        try:
+            certificate
+        except:
+            pass
+        else:
+            mqttc.tls_set(certificate, certfile=None, \
+            keyfile=None, \
+            cert_reqs=ssl.CERT_REQUIRED, \
+            tls_version=(getattr(ssl,'PROTOCOL_'+tls_version)), \
+            ciphers=None)
+            mqttc.tls_insecure_set(tls_insecure)
+        try:
+            username
+        except:
+            pass
+        else:
+            mqttc.username_pw_set(username, password=password)
+        mqttc.connect(broker, port=port)
+        mqttc.loop_start()
+        mqttc.publish(topic, state)
+        mqttc.disconnect()
+        mqttc.loop_start()
+        print("MQTT data published: " +state)
+    
+    if destination == 'screen':
+        print("Energy: "+str(new_energy))
+        print("Volume: "+str(new_volume))
+        print("Temperature in: "+str(new_temp_in))
+        print("Temperature out: "+str(new_temp_out))
+
+# Updating values
+    previous_readings_file = open(previous_readings_filepath,'w')
+    previous_readings_file.write(str(new_energy)+","\
+    +str(new_volume))
+    previous_readings_file.close()
