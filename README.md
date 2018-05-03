@@ -45,7 +45,7 @@ sensor.template to accomplish.
 Starting with this release, the script also supports sending the measurements 
 to a MQTT broker. When this option is selected, all values are sent to a single
 MQTT topic. Home Assistant will be able to create separate sensors on a single
-MQTT topic.
+MQTT topic. 
 
 # 2. REQUIREMENTS
 To run, this script requires Python 3 with the following modules to be
@@ -94,8 +94,39 @@ This section is used for the main configuration of the script.
     
 - destination (required)
 
-    Can be either 'mqtt' or 'http'. Defines what to do with the data received
-    from the meter.
+    Can be 'mqtt', 'http' or 'screen'. Defines what to do with the data 
+    received from the meter. Http sends the readings directly to the Home 
+    Assistant RESTful API. MQTT needs an MQTT broker which can be subscribed to
+    by Home Assistant or another home automation application which supports
+    MQTT. Screen can be used for debugging or testing purposes as it just shows
+    the meter readings to the screen. It does not need parameters set in any 
+    other section.
+    
+- compare_previous_readings
+
+    Can be True or False.
+    On the first run (even when set to False) a text file called
+    'previous_readings.txt' will be created, containing the energy and volume
+    reading. If set to True the new reading will be compared to the old 
+    reading. Because the meter can only count forwards, no new values lower
+    than the previous one will be allowed. This feature is implemented because 
+    my meter sometimes gives wrong information back (not sure why). When 
+    selected, the script will also check if the difference between the new
+    reading is not too big. To configure this the following options can be 
+    used. 
+    
+- energy_threshold (optional)
+
+    This section is only required when compare_previous_readings is enabled. 
+    Enter how much GJ difference between the previous reading and current 
+    reading should be considered normal. 
+    
+- volume_threshold: 
+    
+    This section is only required when compare_previous_readings is enabled. 
+    Enter how much M3 difference between the previous reading and current 
+    reading should be considered normal. 
+
     
 ## http section
 This section is required if destination is set to http.
