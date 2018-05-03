@@ -123,10 +123,11 @@ def get_meter_readings():
 
 # Check if previous readings file exist and if not disable comparing
 ###############################
-previous_readings_filepath = os.path.join\
-(os.path.dirname(os.path.realpath(__file__)),'previous_readings.txt')  
-if not os.path.isfile(previous_readings_filepath):
-    compare_previous_readings = False
+if compare_previous_readings:
+    previous_readings_filepath = os.path.join\
+    (os.path.dirname(os.path.realpath(__file__)),'previous_readings.txt')  
+    if not os.path.isfile(previous_readings_filepath):
+        compare_previous_readings = False
 
 
 # Getting information from Kamstrup Multical 66C

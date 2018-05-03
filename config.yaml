@@ -1,6 +1,9 @@
 main:
   serialport: /dev/ttyUSB13
   destination: mqtt
+  compare_previous_readings: true
+  energy_threshold: 1
+  volume_threshold: 3
   
 http:
   protocol: http
