@@ -1,6 +1,6 @@
 ###############################################################################
 # Kamstrup Multical 66C import script for Home Assistant                      #
-# Version 0.1                                                                 #
+# Version 0.3                                                                 #
 # Author: RuntimeError123 / L. Bosch                                          #
 # MIT License                                                                 #
 # Copyright (c) 2018 RuntimeError123 / L. Bosch                               #
@@ -49,29 +49,11 @@ if compare_previous_readings:
 #################################
 if destination == 'mqtt':
     import paho.mqtt.client as mqtt
-    import ssl
+    if 'certificate' in config['mqtt']:
+        import ssl
 
 # Declaring variables
 #################################
-if destination == 'http':
-    protocol = config['http']['protocol']
-    homeassistant_ip = config['http']['homeassistant_ip']
-    port = str(config['http']['port'])
-    if 'api_password' in config['http']:
-        api_password = config['http']['api_password']
-    energy_entity_id = config['http']['energy_entity_id']
-    energy_friendly_name = config['http']['energy_friendly_name']
-    energy_icon = config['http']['energy_icon']
-    volume_entity_id = config['http']['volume_entity_id']
-    volume_friendly_name = config['http']['volume_friendly_name']
-    volume_icon = config['http']['volume_icon']
-    temp_in_entity_id = config['http']['temp_in_entity_id']
-    temp_in_friendly_name = config['http']['temp_in_friendly_name']
-    temp_in_icon = config['http']['temp_in_icon']
-    temp_out_entity_id = config['http']['temp_out_entity_id']
-    temp_out_friendly_name = config['http']['temp_out_friendly_name']
-    temp_out_icon = config['http']['temp_out_icon']
-
 if destination == 'mqtt':
     broker = config['mqtt']['broker']
     port = config['mqtt']['port']
@@ -86,25 +68,6 @@ if destination == 'mqtt':
 
 # Function
 #################################
-def http_change_entity_state(entity_id: str,
-    friendly_name: str,
-    unit_of_measurement: str,
-    icon: str,
-    new_state: float):
-        url = protocol+'://'+homeassistant_ip+':'+port+'/api/states/'+entity_id
-        try:
-            api_password
-        except:
-            headers = {'content-type' : 'application/json'}
-        else:
-            headers = {'x-ha-access' : api_password, \
-            'content-type' : 'application/json'}
-        data = json.dumps({'state' : new_state, \
-        'attributes' : {'unit_of_measurement' : unit_of_measurement, \
-        'friendly_name' : friendly_name, 'icon' : icon}})
-        response = requests.post(url, headers=headers, data=data)
-        return response
-
 def get_meter_readings():
     mc66c = serial.Serial(port=serialport,
         bytesize=serial.SEVENBITS,
@@ -159,30 +122,6 @@ if compare_previous_readings:
 # Updating values
 ###############################
 if compare_successful or not compare_previous_readings:
-    if destination == 'http':
-        energy_response = http_change_entity_state(energy_entity_id,
-            energy_friendly_name,
-            'GJ',
-            energy_icon,new_energy)
-        print("Energy updated: ",energy_response)
-        volume_response = http_change_entity_state(volume_entity_id,
-            volume_friendly_name,
-            'M3',
-            volume_icon,new_volume)
-        print("Volume updated: ",volume_response)
-        temp_in_response = http_change_entity_state(temp_in_entity_id,
-            temp_in_friendly_name,
-            '°C',
-            temp_in_icon,
-            new_temp_in)
-        print("Temperature in updated: ",temp_in_response)
-        temp_out_response = http_change_entity_state(temp_out_entity_id,
-            temp_out_friendly_name,
-            '°C',
-            temp_out_icon,
-            new_temp_out)
-        print("Temperature out updated: ",temp_out_response)
-
     if destination == 'mqtt':
         state = json.dumps({'Energy' : new_energy, \
         'Volume' : new_volume, \
@@ -212,7 +151,6 @@ if compare_successful or not compare_previous_readings:
         mqttc.disconnect()
         mqttc.loop_start()
         print("MQTT data published: " +state)
-    
     if destination == 'screen':
         print("Energy: "+str(new_energy))
         print("Volume: "+str(new_volume))

@@ -35,17 +35,10 @@ should be somewhere around 10 years. This will be shorter when the meter is
 requested to transmit it's readings every few minutes. I am using this script
 to update the readings every 30 minutes in Home Assistant. The script can be 
 run with two configurations. 
-It can use Home Assistant's RESTful API to set the value (state) of some HTTP 
-sensors. The values which are parsed and published to Home Assistant are: total
-consumed energy (GJ), total water flow (M3), incoming temperature (°C), 
-outgoing temperature (°C). There are some values being ignored. One of them is 
-the delta temperature. I was not finding that interesting because it is just 
-incoming temperature minus outgoing temperature. If required, please use a 
-sensor.template to accomplish.
-Starting with this release, the script also supports sending the measurements 
-to a MQTT broker. When this option is selected, all values are sent to a single
-MQTT topic. Home Assistant will be able to create separate sensors on a single
-MQTT topic. 
+It uses an MQTT broker (Home Asssistance integrated or stand alone) to send 
+the measurements. All values are sent to a single MQTT topic. Home Assistant 
+will be able to create separate sensors on a single MQTT topic. For testing 
+purposes, this script can also output to the screen.
 
 # 2. REQUIREMENTS
 To run, this script requires Python 3 with the following modules to be
@@ -54,10 +47,13 @@ installed:
 - requests
 - json
 - time
-- yaml (installable with `apt-get install python3-yaml`)
+- yaml (can be installed with `apt-get install python3-yaml`)
 
 To use this script with MQTT, install Paho MQTT 
 (`apt-get install python3-pip && pip3 install paho-mqtt`).
+
+When this script is configured to use SSL/TLS, the Python SSL module is 
+required.
 
 To get the meter readings, you will need an IR interface. I am currently using
 the IR Schreib Lesekopf (infrared read write head) from Volkszaehler
@@ -69,7 +65,7 @@ Place the files from Git in a separate folder (e.g.
 /home/homeassistant/stadsverwarming). Edit the config.yaml file according to 
 your situation. Please see next paragraph for more information. Test the script 
 by running it using python3 stadsverwarming.py . When it is not executed by 
-root (which I would definitely recommend) the user running this script must 
+root (which I would strongly recommend) the user running this script must 
 have permission to use serial ports. In Debian / Ubuntu this can be
 accomplished by adding the user to the 'dialout' group. Schedule the script to
 run every X minutes / hours using crontab.
@@ -113,7 +109,7 @@ This section is used for the main configuration of the script.
     my meter sometimes gives wrong information back (not sure why). When 
     selected, the script will also check if the difference between the new
     reading is not too big. To configure this the following options can be 
-    used. 
+    used.  
     
 - energy_threshold (optional)
 
@@ -121,54 +117,11 @@ This section is used for the main configuration of the script.
     Enter how much GJ difference between the previous reading and current 
     reading should be considered normal. 
     
-- volume_threshold: 
+- volume_threshold (optional): 
     
     This section is only required when compare_previous_readings is enabled. 
     Enter how much M3 difference between the previous reading and current 
     reading should be considered normal. 
-
-    
-## http section
-This section is required if destination is set to http.
-
-- protocol (required)
-
-    The protocol used to connect to Home Assistant. Supportes http and
-    https. When using https, please make sure that the certificate provided is 
-    trusted by the machine running this script. For security reasons I 
-    recommend https.
-    
-- homeassistant_ip (required)
-
-    The IP address used to connect to Home Assistant. FQDN's are also
-    supported.
-
-- port (required)
-
-    The port used to connect to Home Assistant. Home Assistant's default is 
-    8123.
-
-- api_password (optional)
-
-    Password which is configured as api_password in Home Assistant's
-    configuration.yaml or secrets.yaml. Remove from config file if your Home 
-    Assistant is not protected by a password. I recommend configuring an api 
-    password for Home Assistant.
-
-- [energy/volume/temp_in/temp_out]\_entity_id (required)
-
-  Device identifier which must be unique to this specific device in Home
-    Assistant. Must be in the format [component name].[platform]\_name .
-
-- [energy/volume/temp_in/temp_out]\_friendly\_name (required)
-
-    Friendly name, how device will be displayed in Home Assistant. Can be
-    overridden by customize.yaml.
-
-- [energy/volume/temp_in/temp_out]\_icon (required)
-
-    Icon used for the sensor in GUI. Append with "mdi:" and the Material Design
-    Icon name. Icon "alert" would become "mdi:alert".
     
 ## mqtt section
 
@@ -226,11 +179,6 @@ This section is required if destination is set to mqtt
     The script will send the measurement values as JSON to this topic.
     
 # Home Assistant configuration
-
-## http
-No specific configuration required
-
-## mqtt
 
 As an example you can make a configuration item in Home Assistant's
 configuration.yaml. You need to define the connection to the MQTT broker if it
