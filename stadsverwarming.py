@@ -149,7 +149,7 @@ if compare_successful or not compare_previous_readings:
         mqttc.loop_start()
         mqttc.publish(topic, state)
         mqttc.disconnect()
-        mqttc.loop_start()
+        mqttc.loop_stop()
         print("MQTT data published: " +state)
     if destination == 'screen':
         print("Energy: "+str(new_energy))
