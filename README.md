@@ -2,7 +2,7 @@
 ## Imports meter readings of Kamstrup Multical 66C to Home Assistant or MQTT.
 ## Author: RuntimeError123 / L. Bosch
 ## MIT License
-#### Copyright © 2018 RuntimeError123 / L. Bosch
+#### Copyright © 2019 RuntimeError123 / L. Bosch
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -177,6 +177,11 @@ This section is required if destination is set to mqtt
 - topic: (required)
 
     The script will send the measurement values as JSON to this topic.
+
+- retain (required): 
+
+    Specify the retain flag for the message. It will be set as 'last known 
+    good' or retained on the broker.
     
 # Home Assistant configuration
 
@@ -203,26 +208,21 @@ configuration.yaml. This may also be placed in a separate file linked by
           name: "Temperature in"
           unit_of_measurement: "°C"
           value_template: "{{ value_json.Temperature_in }}"
-          retain: true
         - platform: mqtt
           state_topic: home-assistant/stadsverwarming
           name: "Temperature out"
           unit_of_measurement: "°C"
           value_template: "{{ value_json.Temperature_out }}"
-          retain: true
         - platform: mqtt
           state_topic: home-assistant/stadsverwarming
           name: "Volume"
           unit_of_measurement: "M3"
           value_template: "{{ value_json.Volume }}"
-          retain: true
         - platform: mqtt
           state_topic: home-assistant/stadsverwarming
           name: "Energy"
           unit_of_measurement: "GJ"
           value_template: "{{ value_json.Energy }}"
-          retain: true
-
 
 # Tests
 

@@ -65,6 +65,7 @@ if destination == 'mqtt':
         tls_version = config['mqtt']['tls_version']
         tls_insecure = config['mqtt']['tls_insecure']
     topic = config['mqtt']['topic']
+    retain = config['mqtt']['retain']
 
 # Function
 #################################
@@ -147,7 +148,7 @@ if compare_successful or not compare_previous_readings:
             mqttc.username_pw_set(username, password=password)
         mqttc.connect(broker, port=port)
         mqttc.loop_start()
-        mqttc.publish(topic, state)
+        mqttc.publish(topic, state, retain=retain)
         mqttc.disconnect()
         mqttc.loop_stop()
         print("MQTT data published: " +state)

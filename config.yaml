@@ -14,3 +14,5 @@ mqtt:
   tls_version: TLSv1_2
   tls_insecure: false
   topic: home-assistant/stadsverwarming
+  retain: true
+  
