@@ -58,7 +58,7 @@ required.
 To get the meter readings, you will need an IR interface. I am currently using
 the IR Schreib Lesekopf (infrared read write head) from Volkszaehler
 (https://wiki.volkszaehler.org/hardware/controllers/ir-schreib-lesekopf) which 
-I recommend.
+I recommend but might be harder to get, though the PCB schematics looks to be available under an open source hardware license from https://github.com/Hal9k-dk/kamstrup (plus BOM and more info on http://wiki.hal9k.dk/projects/kamstrup). This [IR Read and Write USB-cable from ebay](https://www.ebay.nl/itm/USB-IR-Infrarot-Lese-Schreibkopf-f%C3%BCr-Stromz%C3%A4hler-Smart-Meter/274095213723) has also been reported to work perfectly. 
 
 # 3. INSTALLATION
 Place the files from Git in a separate folder (e.g.
